@@ -1,66 +1,57 @@
 const express = require('express')
 const Joi = require('joi')
+const mongoose = require('mongoose')
+const { Genre,validateGenre } = require('../models/genre')
 const router = express.Router()
 
-const genres =[
-    {
-        id:1,
-        genre:"horror"
-    },
-    {
-        id:2,
-        genre:"True story"
-    },
-    {
-        id:3,
-        genre:"documentary"
-    },
-    {
-        id:4,
-        genre:"Drama"
-    }
-]
-router.get('/', (req,res)=>{
-    res.send(genres)
-})
+// routes
 
-router.get('/:genre', (req,res)=>{
-    const genre = genres.find(g => g.genre === req.params.genre)
+// get all genres
+router.get('/', async (req,res)=>{
+    const genres = await Genre.find().sort({genre:1})
+   res.send(genres)
+    
+})
+// get genre by name
+
+router.get('/:genre', async (req,res)=>{
+    const genre = await Genre.find({genre: req.params.genre})
     if(!genre) return res.status(404).send('genre not found')
     res.send(genre)
 })
 
-router.post('/',(req,res)=>{
-    const schema = Joi.object({
-        id:Joi.number(),
-        genre: Joi.string().max(10)
-    });
-
-    const newGenre={
-        id: genres.length + 1,
-        genre: req.body.genre
-    }
-    const result = schema.validate(newGenre)
+// create a new genre
+router.post('/',async (req,res)=>{
+    const result = validateGenre(req.body)
     if(result.error) return res.status(400).send(result.error.details[0].message)
-    genres.push(newGenre)
-    res.send(genres)
-})
 
-router.put('/:id',(req,res)=>{
-    let genre = genres.find(g => g.id === parseInt(req.params.id))
-    if(!genre) return res.status(404).send('genre not found')
-    genre.genre = req.body.genre
+    let genre = new Genre({
+        genre: req.body.genre
+    })
+
+    genre = await genre.save()
+    
     res.send(genre)
 })
 
-router.delete('/:id',(req,res)=>{
-    const genre = genres.find(g => g.id === parseInt(req.params.id))
+// find by id and update
+router.put('/:id',async (req,res)=>{
+    const result = validateGenre(req.body)
+    if(result.error) return res.status(400).send(result.error.details[0].message)
+
+    const genre = await Genre.findByIdAndUpdate(req.params.id,{genre: req.body.genre
+    }, {new: true}
+    )
     if(!genre) return res.status(404).send('genre not found')
-    const index = genres.indexOf(genre)
-    genres.splice(index,1)
-    res.send(genres)
+    res.send(genre)
 })
 
-
+// delete genre
+router.delete('/:id',async (req,res)=>{
+    const genre = await Genre.findByIdAndRemove(req.params.id)
+    if(!genre) return res.status(404).send('genre not found')
+    
+    res.send(genre)
+})
 
 module.exports = router;
