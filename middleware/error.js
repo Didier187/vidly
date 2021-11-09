@@ -1,7 +1,6 @@
 const { createLogger, format, transports } = require('winston')
 require('winston-mongodb');
 
-
 function errorHandler(err,req,res,next){
     const logger = createLogger({
         transports:[
