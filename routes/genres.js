@@ -1,17 +1,20 @@
 const express = require('express')
+const auth = require('../middleware/auth')
 const Joi = require('joi')
 const mongoose = require('mongoose')
 const { Genre,validateGenre } = require('../models/genre')
+const admin = require('../middleware/admin')
 const router = express.Router()
 
 // routes
 
 // get all genres
-router.get('/', async (req,res)=>{
+router.get('/', async (req,res)=>{ 
+    throw new Error('oops')   
     const genres = await Genre.find().sort({genre:1})
-   res.send(genres)
-    
+    res.send(genres)       
 })
+
 // get genre by name
 
 router.get('/:genre', async (req,res)=>{
@@ -21,7 +24,7 @@ router.get('/:genre', async (req,res)=>{
 })
 
 // create a new genre
-router.post('/',async (req,res)=>{
+router.post('/',auth,async (req,res)=>{
     const result = validateGenre(req.body)
     if(result.error) return res.status(400).send(result.error.details[0].message)
 
@@ -35,7 +38,7 @@ router.post('/',async (req,res)=>{
 })
 
 // find by id and update
-router.put('/:id',async (req,res)=>{
+router.put('/:id',auth,async (req,res)=>{
     const result = validateGenre(req.body)
     if(result.error) return res.status(400).send(result.error.details[0].message)
 
@@ -47,7 +50,7 @@ router.put('/:id',async (req,res)=>{
 })
 
 // delete genre
-router.delete('/:id',async (req,res)=>{
+router.delete('/:id',[auth, admin],async (req,res)=>{
     const genre = await Genre.findByIdAndRemove(req.params.id)
     if(!genre) return res.status(404).send('genre not found')
     

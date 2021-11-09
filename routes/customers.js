@@ -7,12 +7,12 @@ const router = express.Router()
 router.post('/', async(req, res)=>{
     const result = validateCustomer(req.body)
     if(result.error) return res.status(400).send(result.error.details[0].message)
-    let customer = new Customer({
+    const customer = new Customer({
         isGold: req.body.isGold,
         name: req.body.name,
         phone: req.body.phone
     })
-    customer = await customer.save()
+    await customer.save()
     res.send(customer)
 })
 
