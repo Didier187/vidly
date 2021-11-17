@@ -11,7 +11,6 @@ function auth(req,res, next){
         next()
     }catch(e){
         res.status(400).send('invalid token')
-        console.log(e)
     }
     
 }
