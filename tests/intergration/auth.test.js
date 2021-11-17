@@ -9,7 +9,7 @@ describe("auth middleware", () => {
   });
   afterEach(async () => {
     await Genre.deleteMany({});
-    server.close();
+    await server.close();
   });
   afterAll(() => mongoose.disconnect());
   let token;
