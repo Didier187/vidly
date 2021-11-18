@@ -5,3 +5,4 @@ async function run(){
     console.log(hashedPass)
 }
 run()
+console.log((process.env.NODE_ENV))
