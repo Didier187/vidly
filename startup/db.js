@@ -7,5 +7,5 @@ module.exports = function () {
   mongoose
     .connect(config.get("db"))
     .then(() => console.log(`connected to ${config.get("db")} `))
-    .catch((e) => console.log("unable to connect"));
+    .catch((e) => console.log("unable to connect to database", e));
 };
