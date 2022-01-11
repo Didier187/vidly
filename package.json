@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --verbose --detectOpenHandles --coverage",
-    "start":"node index.js"
+    "start": "node index.js"
   },
   "engines": {
-    "node":"15.14.0"
+    "node": "15.14.0"
   },
   "keywords": [],
   "author": "",
