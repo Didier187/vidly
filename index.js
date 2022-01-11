@@ -1,6 +1,13 @@
 require("express-async-errors");
 const express = require("express");
 const app = express();
+
+//allowing cross origin access
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
+
 require("./startup/logging")();
 require("./startup/routes")(app);
 require("./startup/db")();
