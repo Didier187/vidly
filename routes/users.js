@@ -30,7 +30,7 @@ router.post('/', async (req,res)=>{
     if(user) return res.status(400).send('user with that email already exists')
 
     // lodash picks only spacified properties from the given object
-    user = new User(lodash.pick(req.body,['name', 'email','password']))
+    user = new User(lodash.pick(req.body,['name', 'email','password','isAdmin']))
     const salt =  await bcrypt.genSalt(10)
     user.password = await bcrypt.hash(user.password, salt)
     await user.save()
