@@ -1,15 +1,10 @@
 require("express-async-errors");
 const express = require("express");
+const cors = require('cors')
 const app = express();
 
 //allowing cross origin access
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin:*");
-  req.header("Access-Control-Allow-Headers:*",);
-  req.header("Access-Control-Allow-Haeders:x-auth-token")
-  req.header("Access-Control-Allow-Headers: Accept")
-  next();
-});
+app.use(cors());
 
 require("./startup/logging")();
 require("./startup/routes")(app);
